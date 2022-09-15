@@ -10,7 +10,7 @@ module.exports = {
   // Get a user
   getSingleUser(req, res) {
     console.log(req.params.id);
-    User.findOne({ id: req.params.id })
+    User.findOne({ _id: req.params.id })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
@@ -29,7 +29,7 @@ module.exports = {
   },
   // Delete a user
   deleteUser(req, res) {
-    User.findOneAndDelete({ id: req.params.id })
+    User.findOneAndDelete({ _id: req.params.id })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
@@ -41,7 +41,7 @@ module.exports = {
   // Update a user
   updateUser(req, res) {
     User.findOneAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
     )
