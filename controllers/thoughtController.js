@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongoose').Types;
 const { Thought, User } = require('../models');
 
 // Aggregate function to get the number of thoughts overall
@@ -25,8 +24,7 @@ module.exports = {
   },
   // Get a single thought
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.thoughts })
-      .select('_id')
+    Thought.findOne({ _id: req.params.id })
       .then(async (thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
@@ -87,11 +85,11 @@ module.exports = {
 
   // Add an reaction to a thought
   createReaction(req, res) {
-    console.log('You are adding an reaction');
+    console.log('A reaction is being added');
     console.log(req.body);
     Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
-      { $addToSet: { reactions: req.body } },
+      { _id: req.params.id },
+      { $addToSet: { reaction: req.body } },
       { runValidators: true, new: true }
     )
       .then((thought) =>
@@ -105,9 +103,11 @@ module.exports = {
   },
   // Remove reaction from a thought
   deleteReaction(req, res) {
+    console.log('A reaction is being deleted');
+    console.log(req.body);
     Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
-      { $pull: { reaction: { reactionId: req.params.reactionId } } },
+      { _id: req.params.id },
+      { $pull: { reaction: { _id: req.body} } },
       { runValidators: true, new: true }
     )
       .then((thought) =>
